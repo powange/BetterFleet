@@ -292,7 +292,10 @@ public class SessionManager {
         SotServer findedSotServer = getServerFromHashing(server);
 
         Fleet fleet = getFleetByPlayerName(player.getUsername());
-        assert fleet != null;
+        if (fleet == null) {
+            Log.warn("Cannot join server: fleet not found for player " + player.getUsername());
+            return;
+        }
 
         // Detect if the server is not already know by the fleet
         if (!fleet.getServers().containsKey(findedSotServer.getHash())) {
@@ -333,9 +336,16 @@ public class SessionManager {
         SotServer findedSotServer = getServerFromHashing(server);
 
         Fleet fleet = getFleetByPlayerName(player.getUsername());
-        assert fleet != null;
+        if (fleet == null) {
+            Log.warn("Cannot leave server: fleet not found for player " + player.getUsername());
+            return;
+        }
 
         SotServer fleetFindedServer = fleet.getServers().get(findedSotServer.getHash());
+        if (fleetFindedServer == null) {
+            Log.warn("[" + fleet.getSessionId() + "] Cannot leave server: server not found in fleet");
+            return;
+        }
         fleetFindedServer.getConnectedPlayers().remove(player);
 
         // If SotServer empty remove server from the list

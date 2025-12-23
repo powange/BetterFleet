@@ -181,12 +181,19 @@ export class Fleet {
     this.servers = new Map(Object.entries(receivedFleet.servers));
     this.stats = receivedFleet.stats;
     UserStore.player.sessionId = receivedFleet.sessionId;
-    const player: Player = receivedFleet.players.filter(
+    const player: Player | undefined = receivedFleet.players.find(
       (x) => x.username == UserStore.player.username,
-    )[0];
-    UserStore.player.isMaster = player.isMaster;
-    UserStore.player.isReady = player.isReady;
-    UserStore.player.device = player.device;
+    );
+    if (player) {
+      UserStore.player.isMaster = player.isMaster;
+      UserStore.player.isReady = player.isReady;
+      UserStore.player.device = player.device;
+    } else {
+      error(
+        "[Fleet.ts] Player not found in fleet update: " +
+          UserStore.player.username,
+      );
+    }
   }
 
   private handleSessionRunner(countdown: number) {
