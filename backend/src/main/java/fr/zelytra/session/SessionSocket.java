@@ -172,6 +172,10 @@ public class SessionSocket {
     private void handleJoinServerMessage(Session session, SotServer sotServer) {
         SessionManager manager = sessionManager;
         Player player = manager.getPlayerFromSessionId(session.getId());
+        if (player == null) {
+            Log.warn("[" + session.getId() + "] Cannot join server: player not found in session");
+            return;
+        }
         manager.playerJoinSotServer(player, sotServer);
     }
 
@@ -179,6 +183,10 @@ public class SessionSocket {
     private void handleLeaveServerMessage(Session session, SotServer sotServer) {
         SessionManager manager = sessionManager;
         Player player = manager.getPlayerFromSessionId(session.getId());
+        if (player == null) {
+            Log.warn("[" + session.getId() + "] Cannot leave server: player not found in session");
+            return;
+        }
         manager.playerLeaveSotServer(player, sotServer);
     }
 
