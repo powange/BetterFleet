@@ -46,7 +46,7 @@
             v-for="[hash, server] of getFilteredSotServer()"
             :key="hash"
             :server="
-              hash.toUpperCase() +
+              server.ip + ':' + server.port +
               (!server.location ? '' : ' | ' + server.location)
             "
             :color="server.color"
